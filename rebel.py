@@ -33,7 +33,11 @@ def append_message(role, content):
 
 company = "De Acero"
 
-client = openai.Client(api_key=st.secrets["api_key"])
+api_key = st.secrets["api_key"]
+
+print("api_key: ", api_key)
+
+client = openai.Client(api_key=api_key)
 
 assistant = client.beta.assistants.create(
   name="Rebel",
