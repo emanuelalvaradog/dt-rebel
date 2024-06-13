@@ -4,19 +4,19 @@ import time
 import json
 import streamlit as st
 from setup import SingletonAssistant
+import requests
 
 # FUNCTIONS
 def get_projects(prompt):
   print("calling endpoint with prompt: " + prompt)
 
-  # CALL IVAN'S API ENDPOINT
+  results = requests.post(url="https://rag-service-eg5yxvopfa-uc.a.run.app/query", json={"prompt": prompt})
 
-  project_data = {
-    "description": "This is a description of project 1",
-    "name": "Project 1"
-  }
+  documents = results.json()
 
-  return project_data
+  documents = json.dumps(documents["documents"])
+
+  return documents
 
 
 def create_project(project_schema):
@@ -99,7 +99,7 @@ if user_input:
 
         tool_outputs.append({
           "tool_call_id": tool.id,
-          "output":  json.dumps(get_projects(prompt))
+          "output":  get_projects(prompt)
         })
 
       if tool.function.name == "create_project":
