@@ -8,15 +8,20 @@ import streamlit as st
 def get_projects(prompt):
   print("calling endpoint with prompt: " + prompt)
 
+  # CALL IVAN'S API ENDPOINT
+
   project_data = {
     "description": "This is a description of project 1",
     "name": "Project 1"
   }
+
   return project_data
 
 
 def create_project(project_schema):
   print("calling rebel with project data: " + json.dumps(project_schema))
+
+  # NICE TO HAVE: CALL GENERATE WITH REBEL ENDPOINT
 
   return "Project created"
 
@@ -29,26 +34,40 @@ def append_message(role, content):
 
 
 # SETUP
-# api_key = "sk-proj-JxcGuBv37gs7nirHmIzYT3BlbkFJtHhSDdYe3P5k7GCvt4ae"
+
 
 company = "De Acero"
 
-api_key = st.secrets.api_key
+# api_key = st.secrets.api_key
 
-print("api_key: ", api_key)
+# print("api_key: ", api_key)
+
+
+# ---------------------------------------------
+
+## IMPORTANT: KEEP IT AS A CONVERSTATION, NOT AS A BULK DATA LOAD.
+## IMPORTANT: KEEP IT AS A CONVERSTATION, NOT AS A BULK DATA LOAD.
+## IMPORTANT: KEEP IT AS A CONVERSTATION, NOT AS A BULK DATA LOAD.
+
+## change initial instructions to keep it as a conversation
+## change initial instructions to keep it as a conversation
+## change initial instructions to keep it as a conversation
+
+# ---------------------------------------------
 
 client = openai.Client(api_key=api_key)
 
 assistant = client.beta.assistants.create(
   name="Rebel",
-  instructions=f"You are an enterprise Data Translator for {company} . Your role is to help business users validate their project ideas within their company by identifying existing projects within the company and assisting them in creating new projects if necessary. When a user explains their project idea or business problem, you HAVE TO:  1. Ask clarifying questions to understand the user's needs and objectives. 2. Call an internal API to query and identify existing projects related to the user's query. 3. Present relevant existing projects to the user, if any, and ask if they need further assistance. 4. If no existing projects are suitable or the user wishes to create a new project, gather the required information: project name, description, impact area, and problem description. 5. Call an external function to create the new project with the provided information. Be extremely helpful, proactive, and guide the user through each step with clear and concise questions and instructions. """,
-  model="gpt-3.5-turbo-0613",
+  instructions=f"Eres un Traductor de Datos empresarial para {company}. Tu rol es ayudar a los usuarios de negocios a validar sus ideas de proyectos dentro de su compañía mediante UN DIALOGO INTERACTIVO FLUIDO para identificar proyectos existentes y asistir en la creación de nuevos proyectos si es necesario. Al interactuar con un usuario DEBES: Iniciar un diálogo haciendo preguntas clarificadoras para comprender las necesidades y objetivos del usuario de forma progresiva. NUNCA SOLICITANDO TODO DE PRIMERA MANO. Dialogar sobre los proyectos relevantes ya existentes, si los hay, e indagar si el usuario necesita más asistencia o detalles adicionales. Si no se identifican proyectos adecuados o el usuario desea iniciar un nuevo proyecto, conversar para recabar de manera PROGRESIVA Y AMIGABLE la información necesaria: nombre del proyecto, descripción, área de impacto y descripción del problema. En cada paso, debes ser extremadamente útil y proactivo, guiando al usuario a través del proceso con un enfoque conversacional claro y directo.",
+  model="gpt-4",
   temperature=0.6,
   tools=[
     {
       "type": "function",
       "function": {
         "name": "get_projects",
+        "description": "Get projects related to the user's query",
         "parameters": {
           "type": "object",
           "properties":{
@@ -65,6 +84,7 @@ assistant = client.beta.assistants.create(
       "type": "function",
       "function": {
         "name": "create_project",
+        "description": "Create a new project with the provided information",
         "parameters": {
           "type": "object",
           "properties":{
