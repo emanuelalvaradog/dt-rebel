@@ -38,7 +38,7 @@ def append_message(role, content):
 
 company = "De Acero"
 
-# api_key = st.secrets.api_key
+api_key = st.secrets.api_key
 
 # print("api_key: ", api_key)
 
